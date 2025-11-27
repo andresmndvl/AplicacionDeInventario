@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card p-4 shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title text-center mb-3">Iniciar sesión</h3>
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Usuario</label>
+            <input name="nombre" class="form-control rounded-2" value="{{ request.form.nombre or '' }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input name="password" type="password" class="form-control rounded-2">
+          </div>
+          <div class="d-grid">
+            <button class="btn" style="background:#015294;color:#fff;border-radius:6px;">Entrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+:root{
+  --azul-unison:#00529e;
+  --azul-oscuro:#015294;
+  --dorado:#f8bb00;
+  --dorado-oscuro:#d99e30;
+}
+.btn-rounded { border-radius: 6px; }
+input.form-control, textarea.form-control { border-radius: 6px; }
