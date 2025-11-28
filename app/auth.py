@@ -1,10 +1,11 @@
+# app/auth.py
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from .forms import LoginForm
 from .models import User
 from . import db
-from werkzeug.security import check_password_hash, generate_password_hash
-from flask_login import login_user, logout_user, current_user
-from datetime import datetime
+from werkzeug.security import check_password_hash
+from flask_login import login_user, logout_user
+from datetime import datetime, timezone
 
 bp = Blueprint('auth', __name__, template_folder='templates')
 
@@ -17,9 +18,10 @@ def login():
         user = User.query.filter_by(nombre=nombre).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
-            # actualizar fecha_hora_ultimo_inicio
-            user.fecha_hora_ultimo_inicio = datetime.utcnow()
+
+            user.fecha_hora_ultimo_inicio = datetime.now(timezone.utc)
             db.session.commit()
+
             return redirect(url_for('index'))
         else:
             flash('Usuario o contraseña incorrectos', 'danger')

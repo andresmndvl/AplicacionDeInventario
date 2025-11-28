@@ -1,15 +1,17 @@
+{# app/templates/products/list.html #}
 {% extends "base.html" %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2>Productos</h2>
+  <h2>Productos</h2> {# <-- Header correcto para productos #}
   {% if current_user.is_authenticated and (current_user.rol == 'ADMIN' or current_user.rol == 'PRODUCTOS') %}
     <a class="btn btn-primary btn-rounded" href="{{ url_for('products.create') }}">Agregar producto</a>
   {% endif %}
 </div>
 
-<!-- Filtros -->
+
 <div class="card mb-3 p-3">
   <form class="row g-3" method="get">
+
     <div class="col-md-4">
       <label class="form-label">Nombre</label>
       <input name="nombre" class="form-control" value="{{ request.args.get('nombre','') }}">

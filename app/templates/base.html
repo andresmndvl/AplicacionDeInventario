@@ -38,6 +38,15 @@
           <li class="nav-item">
             <span class="nav-link">Hola, <strong>{{ current_user.nombre }}</strong> ({{ current_user.rol }})</span>
           </li>
+
+
+          {% if current_user.fecha_hora_ultimo_inicio %}
+            <li class="nav-item">
+              <span class="nav-link small">Último inicio: {{ current_user.fecha_hora_ultimo_inicio | local_dt }}</span>
+            </li>
+          {% endif %}
+          {# -- FIN ADICIÓN -- #}
+
           <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
         {% else %}
           <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Iniciar sesión</a></li>
