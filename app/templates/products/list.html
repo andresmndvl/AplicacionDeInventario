@@ -1,40 +1,88 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Productos</h2>
-
-<div class="mb-3">
-  <a class="btn btn-primary btn-rounded" href="{{ url_for('products.create') }}">Agregar producto</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Productos</h2>
+  {% if current_user.is_authenticated and (current_user.rol == 'ADMIN' or current_user.rol == 'PRODUCTOS') %}
+    <a class="btn btn-primary btn-rounded" href="{{ url_for('products.create') }}">Agregar producto</a>
+  {% endif %}
 </div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Cantidad</th>
-      <th>Precio</th>
-      <th>Almacén</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for p in productos %}
-    <tr>
-      <td>{{ p.id }}</td>
-      <td>{{ p.nombre }}</td>
-      <td>{{ p.cantidad }}</td>
-      <td>{{ "{:.2f}".format(p.precio) }}</td>
-      <td>{{ p.almacen.nombre if p.almacen else "-" }}</td>
-      <td>
-        <a class="btn btn-sm btn-outline-primary btn-rounded" href="{{ url_for('products.edit', id=p.id) }}">Editar</a>
-        <form method="post" action="{{ url_for('products.delete', id=p.id) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar producto?');">
-          <button class="btn btn-sm btn-danger btn-rounded">Eliminar</button>
-        </form>
-      </td>
-    </tr>
-    {% else %}
-    <tr><td colspan="6">No hay productos.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+<!-- Filtros -->
+<div class="card mb-3 p-3">
+  <form class="row g-3" method="get">
+    <div class="col-md-4">
+      <label class="form-label">Nombre</label>
+      <input name="nombre" class="form-control" value="{{ request.args.get('nombre','') }}">
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Cantidad min</label>
+      <input name="cantidad_min" class="form-control" value="{{ request.args.get('cantidad_min','') }}">
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Cantidad max</label>
+      <input name="cantidad_max" class="form-control" value="{{ request.args.get('cantidad_max','') }}">
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Precio min</label>
+      <input name="precio_min" class="form-control" value="{{ request.args.get('precio_min','') }}">
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Precio max</label>
+      <input name="precio_max" class="form-control" value="{{ request.args.get('precio_max','') }}">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Almacén</label>
+      <select name="almacen_id" class="form-select">
+        <option value="">Todos</option>
+        {% for a in almacenes %}
+        <option value="{{ a.id }}" {% if request.args.get('almacen_id')==a.id|string %}selected{% endif %}>{{ a.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4 align-self-end">
+      <button class="btn btn-primary btn-rounded">Aplicar</button>
+      <a class="btn btn-secondary btn-rounded" href="{{ url_for('products.list') }}">Limpiar</a>
+    </div>
+  </form>
+</div>
+
+<!-- Tabla -->
+<div class="card p-3">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Descripción</th><th>Cantidad</th><th>Precio</th><th>Almacén</th><th>Creado</th><th>Última modificación</th><th>Usuario modificación</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in productos %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.descripcion or '' }}</td>
+          <td>{{ p.cantidad }}</td>
+          <td>{{ "{:.2f}".format(p.precio) }}</td>
+          <td>{{ p.almacen.nombre if p.almacen else '-' }}</td>
+          <td>{{ p.fecha_hora_creacion }}</td>
+          <td>{{ p.fecha_hora_ultima_modificacion or '' }}</td>
+          <td>{{ p.ultimo_usuario_en_modificar or '' }}</td>
+          <td>
+            {% if current_user.is_authenticated and (current_user.rol == 'ADMIN' or current_user.rol == 'PRODUCTOS') %}
+              <a class="btn btn-sm btn-outline-primary btn-rounded" href="{{ url_for('products.edit', id=p.id) }}">Editar</a>
+              <form method="post" action="{{ url_for('products.delete', id=p.id) }}" style="display:inline;" onsubmit="return confirm('¿Seguro que desea eliminar este producto?');">
+                <button class="btn btn-sm btn-danger btn-rounded">Eliminar</button>
+              </form>
+            {% else %}
+              <span class="text-muted">No autorizado</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="10">No hay productos.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

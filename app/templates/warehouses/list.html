@@ -1,34 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Almacenes</h2>
-
-<div class="mb-3">
-  <a class="btn btn-primary btn-rounded" href="{{ url_for('warehouses.create') }}">Agregar almacén</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Almacenes</h2>
+  {% if current_user.is_authenticated and (current_user.rol == 'ADMIN' or current_user.rol == 'ALMACENES') %}
+    <a class="btn btn-primary btn-rounded" href="{{ url_for('warehouses.create') }}">Agregar almacén</a>
+  {% endif %}
 </div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for a in almacenes %}
-    <tr>
-      <td>{{ a.id }}</td>
-      <td>{{ a.nombre }}</td>
-      <td>
-        <a class="btn btn-sm btn-outline-primary btn-rounded" href="{{ url_for('warehouses.edit', id=a.id) }}">Editar</a>
-        <form method="post" action="{{ url_for('warehouses.delete', id=a.id) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar almacén?');">
-          <button class="btn btn-sm btn-danger btn-rounded">Eliminar</button>
-        </form>
-      </td>
-    </tr>
-    {% else %}
-    <tr><td colspan="3">No hay almacenes.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="card p-3">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Creado</th><th>Última modificación</th><th>Usuario modificación</th><th>Acciones</th></tr></thead>
+      <tbody>
+        {% for a in almacenes %}
+        <tr>
+          <td>{{ a.id }}</td>
+          <td>{{ a.nombre }}</td>
+          <td>{{ a.fecha_hora_creacion }}</td>
+          <td>{{ a.fecha_hora_ultima_modificacion or '' }}</td>
+          <td>{{ a.ultimo_usuario_en_modificar or '' }}</td>
+          <td>
+            {% if current_user.is_authenticated and (current_user.rol == 'ADMIN' or current_user.rol == 'ALMACENES') %}
+              <a class="btn btn-sm btn-outline-primary btn-rounded" href="{{ url_for('warehouses.edit', id=a.id) }}">Editar</a>
+              <form method="post" action="{{ url_for('warehouses.delete', id=a.id) }}" style="display:inline;" onsubmit="return confirm('¿Seguro que desea eliminar este almacén?');">
+                <button class="btn btn-sm btn-danger btn-rounded">Eliminar</button>
+              </form>
+            {% else %}
+              <span class="text-muted">No autorizado</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">No hay almacenes.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

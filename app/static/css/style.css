@@ -1,8 +1,52 @@
+/* app/static/css/style.css - Tema Universidad de Sonora (Unison) */
 :root{
   --azul-unison:#00529e;
   --azul-oscuro:#015294;
   --dorado:#f8bb00;
   --dorado-oscuro:#d99e30;
+  --radio: 4px;
 }
-.btn-rounded { border-radius: 6px; }
-input.form-control, textarea.form-control { border-radius: 6px; }
+
+/* Global */
+body { font-family: "Segoe UI", "Segoe UI Historic", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif; color: #111; }
+.container { max-width: 1200px; }
+
+/* Navbar */
+.bg-unison { background-color: var(--azul-unison) !important; }
+.navbar .nav-link { color: #fff !important; }
+.navbar .navbar-brand { color: #fff !important; font-weight:600; }
+
+/* Buttons and inputs */
+.btn-rounded { border-radius: var(--radio) !important; }
+.btn { border-radius: var(--radio) !important; }
+input.form-control, textarea.form-control, select.form-select { border-radius: var(--radio) !important; }
+
+/* Primary / Secondary */
+.btn-primary {
+  background-color: var(--azul-oscuro) !important;
+  border-color: var(--azul-oscuro) !important;
+  color: #fff !important;
+}
+.btn-primary:hover { background-color: var(--azul-unison) !important; border-color: var(--azul-unison) !important; }
+
+.btn-secondary {
+  background-color: var(--dorado) !important;
+  border-color: var(--dorado-oscuro) !important;
+  color: #000 !important;
+}
+.btn-secondary:hover { background-color: var(--dorado-oscuro) !important; color: #000 !important; }
+
+/* Cards and tables */
+.card { border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.table thead th { background: linear-gradient(90deg, var(--azul-oscuro), var(--azul-unison)); color: #fff; border-bottom: none; }
+.table tbody td { vertical-align: middle; }
+
+/* Headers */
+h1, h2, h3 { color: var(--azul-oscuro); }
+
+/* Small utilities */
+.text-unison { color: var(--azul-unison); }
+.bg-unison-strong { background: var(--azul-oscuro); color: #fff; }
+
+/* Focus outlines accessibility */
+a:focus, button:focus, input:focus, select:focus { outline: 3px solid rgba(1,82,148,0.12); outline-offset: 2px; }

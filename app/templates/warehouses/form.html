@@ -2,13 +2,13 @@
 {% block content %}
 <h2>{{ action }} almacén</h2>
 
-<form method="post">
+<form method="post" class="card p-3">
   <div class="mb-3">
-    <label>Nombre</label>
+    <label class="form-label">Nombre</label>
     <input class="form-control" type="text" name="nombre" value="{{ almacen.nombre if almacen else '' }}" required>
   </div>
 
-  <button class="btn btn-primary btn-rounded">Guardar</button>
-  <a href="{{ url_for('warehouses.list') }}" class="btn btn-secondary btn-rounded">Cancelar</a>
+  <button class="btn btn-primary btn-rounded">{{ action }}</button>
+  <a class="btn btn-secondary btn-rounded" href="{{ url_for('warehouses.list') }}">Cancelar</a>
 </form>
 {% endblock %}
