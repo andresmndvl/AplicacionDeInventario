@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ action }} almacén</h2>
+
+<form method="post">
+  <div class="mb-3">
+    <label>Nombre</label>
+    <input class="form-control" type="text" name="nombre" value="{{ almacen.nombre if almacen else '' }}" required>
+  </div>
+
+  <button class="btn btn-primary btn-rounded">Guardar</button>
+  <a href="{{ url_for('warehouses.list') }}" class="btn btn-secondary btn-rounded">Cancelar</a>
+</form>
+{% endblock %}

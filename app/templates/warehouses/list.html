@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Almacenes</h2>
+
+<div class="mb-3">
+  <a class="btn btn-primary btn-rounded" href="{{ url_for('warehouses.create') }}">Agregar almacén</a>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in almacenes %}
+    <tr>
+      <td>{{ a.id }}</td>
+      <td>{{ a.nombre }}</td>
+      <td>
+        <a class="btn btn-sm btn-outline-primary btn-rounded" href="{{ url_for('warehouses.edit', id=a.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('warehouses.delete', id=a.id) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar almacén?');">
+          <button class="btn btn-sm btn-danger btn-rounded">Eliminar</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="3">No hay almacenes.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

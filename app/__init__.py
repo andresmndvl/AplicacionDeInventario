@@ -8,21 +8,26 @@ db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 
-def create_app():
+def create_app(config_class=None):
     app = Flask(__name__, static_folder="static", template_folder="templates")
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret')
+
+    if config_class is None:
+        cfg = os.environ.get("FLASK_CONFIG", "config.DevelopmentConfig")
+        app.config.from_object(cfg)
+    else:
+        app.config.from_object(config_class)
+
+    # Ensure DATABASE_URL env or default path
     basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-        'DATABASE_URL', 'sqlite:///' + os.path.join(basedir, '..', 'data', 'InventarioBD.db')
-    )
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    default_db = 'sqlite:///' + os.path.join(basedir, '..', 'data', 'InventarioBD.db')
+    app.config.setdefault('SQLALCHEMY_DATABASE_URI', os.environ.get('DATABASE_URL', default_db))
 
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
-    # blueprints
+    # register blueprints (as before)
     from .auth import bp as auth_bp
     from .products import bp as products_bp
     from .warehouses import bp as warehouses_bp
@@ -31,11 +36,12 @@ def create_app():
     app.register_blueprint(products_bp, url_prefix='/productos')
     app.register_blueprint(warehouses_bp, url_prefix='/almacenes')
 
+    # import models to ensure they're registered
     from . import models
 
-    # home route
     @app.route('/')
     def index():
-        return __import__('flask').render_template('home.html')
+        from flask import render_template
+        return render_template('home.html')
 
     return app

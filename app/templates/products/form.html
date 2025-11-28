@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ action }} producto</h2>
+
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Nombre</label>
+    {{ form.nombre(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Descripción</label>
+    {{ form.descripcion(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Cantidad</label>
+    {{ form.cantidad(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Precio</label>
+    {{ form.precio(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Almacén</label>
+    {{ form.almacen_id(class="form-select") }}
+  </div>
+
+  <button class="btn btn-primary btn-rounded">Guardar</button>
+  <a href="{{ url_for('products.list') }}" class="btn btn-secondary btn-rounded">Cancelar</a>
+</form>
+{% endblock %}
